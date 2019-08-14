@@ -1,23 +1,38 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
 
-// import styles from './Login.module.scss'
+import {
+    FormControl,
+    InputLabel,
+    Input,
+    Button
+  } from "@material-ui/core";
+
+ import styles from './Login.module.scss'
 
 class Login extends Component{
 
     login = (e) => {
-        e.preventDefault()
+        e.preventDefault(e.target)
         this.props.toConnect(e.target.username.value)
     }
 
-    render(){
-        return(
-        <div id='login'>
-            <form onSubmit={this.login}>
-                <label>Username:</label><br/>
-                <input type='text' id='username'/><br/>
-                <input type='submit' value='Log in'/>
-            </form>
-        </div>)
-    }
+    render() {
+        return (
+                <div className={styles.formContainer}>
+                    <form  onSubmit={this.login} >
+                    <h1>Enter you nickname</h1>
+                    
+                    <FormControl margin="normal" fullWidth>
+                        <InputLabel htmlFor="nickname">Nickname</InputLabel>
+                        <Input id='username' type="text" />
+                    </FormControl>
+
+                    <Button type='submit' variant="contained" color="primary" size="medium">
+                        Start
+                    </Button>
+                    </form>
+                </div>
+        );
+      }
 }
 export default Login

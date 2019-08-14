@@ -1,32 +1,39 @@
 import React,{Component} from 'react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
+import Layout from './components/Layout/Layout'
 import MessagingPanel from './components/MessagingPanel/MessagingPanel'
 import Login from './components/Login/Login'
 import Logout from './components/Logout/Logout'
 
 import './App.scss';
 
+
 class App extends Component{
-constructor(props){
-  super(props)
-  this.toConnect=this.toConnect.bind(this)
-}
   state = {
     username:null,
     connection:null,
+    connectionStatus:'offline',
   }
 
   connect = (username) => {
     if(username){
-      const connection = new WebSocket('ws://st-chat.shas.tel')
+      const connection = new ReconnectingWebSocket("wss://wssproxy.herokuapp.com/", null, {reconnectInterval: 3000})
+      
       this.setState({connection,username})
-      connection.onerror = (e) =>{
-       console.log(e)
+      
+      connection.onopen= () =>{
+        this.setState({...this.state,connectionStatus:'online'})
       }
+
+      connection.onclose= () =>{
+        this.setState({...this.state,connectionStatus:'offline'})
+      }
+
     }
   }
 
-  toConnect(username){
+  toConnect = (username) => {
     localStorage.setItem('username', username)
     this.connect(username)
   }
@@ -34,7 +41,7 @@ constructor(props){
   closeConnection = () =>{
     localStorage.removeItem('username')
     this.state.connection.close()
-    this.setState({...this.state, username:null,connection:null})
+    this.setState({...this.state, username:null,connection:null, connectionStatus:'offline'})
   }
 
   componentDidMount(){
@@ -42,13 +49,14 @@ constructor(props){
     if(username){
       this.toConnect(username)
     }
-    setInterval(()=>{
-      if(this.state.connection)
-      {
-        // console.log(this.state.connection.readyState)
-        // console.log(navigator.connection)
-      }
-    },2000)
+
+    window.addEventListener('online', (e) => {
+      this.setState({...this.state,connectionStatus: e.type})
+    });
+
+    window.addEventListener('offline', (e) => {
+      this.setState({...this.state,connectionStatus: e.type})
+    });
   }
 
   sendMessage = (message) => {
@@ -70,10 +78,10 @@ constructor(props){
         { !this.state.username && !this.state.connection ?
           <Login toConnect={this.toConnect}/>
           :
-          <>
+          <Layout connectionStatus={this.state.connectionStatus}>
             <Logout closeConnection={this.closeConnection}/>
             <MessagingPanel username={this.state.username} connection={this.state.connection} sendMessage={this.sendMessage} />
-          </>
+          </Layout>
         }
       </div>
     );
