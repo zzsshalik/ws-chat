@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+
 // import styles from './Login.module.scss';
 
 class Logout extends Component {
@@ -11,9 +13,7 @@ class Logout extends Component {
 
     render() {
       return (
-        <div id="logout">
-          <button value="Logout" type="submit" onClick={this.logout}>Logout</button>
-        </div>
+        <Button variant="outlined" value="Logout" type="submit" onClick={this.logout}>Logout</Button>
       );
     }
 }

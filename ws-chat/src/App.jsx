@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-import Layout from './components/Layout/Layout'
-import MessagingPanel from './components/MessagingPanel/MessagingPanel'
-import Login from './components/Login/Login'
-import Logout from './components/Logout/Logout'
+import Layout from './components/Layout/Layout';
+import MessagingPanel from './components/MessagingPanel/MessagingPanel';
+import Login from './components/Login/Login';
 
 import './App.scss';
 
 
 class App extends Component {
-  state = {
-    username:null,
-    connection:null,
-    connectionStatus:'offline',
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: null,
+      connection: null,
+      connectionStatus: 'offline',
+    };
   }
 
   componentDidMount() {
@@ -53,7 +55,8 @@ class App extends Component {
 
   closeConnection = () => {
     localStorage.removeItem('username');
-    this.state.connection.close();
+    const { connection } = this.state;
+    connection.close();
     this.setState({...this.state, username: null, connection: null, connectionStatus: 'offline' });
   }
 
@@ -63,27 +66,29 @@ class App extends Component {
 
   sendMessage = (message) => {
     const openConnectionCode = 1;
-    if (this.state.username) {
-      if (this.state.connection.readyState === openConnectionCode) {
+    const { connection, username } = this.state;
+
+    if (username) {
+      if (connection.readyState === openConnectionCode) {
         const data = {
-          from: this.state.username,
+          from: username,
           message,
-        }
-        this.state.connection.send(JSON.stringify(data))
+        };
+        connection.send(JSON.stringify(data));
       }
     }
   }
 
   render() {
+    const { connection, username, connectionStatus } = this.state;
     return (
       <div className="App">
-        { !this.state.username && !this.state.connection
+        { !username && !connection
           ? <Login toConnect={this.toConnect} />
           : (
-            <Layout connectionStatus={this.state.connectionStatus}>
+            <Layout connectionStatus={connectionStatus} closeConnection={this.closeConnection}>
               <div className="container">
-              <Logout closeConnection={this.closeConnection}/>
-              <MessagingPanel username={this.state.username} connection={this.state.connection} sendMessage={this.sendMessage} />
+                <MessagingPanel username={username} connection={connection} sendMessage={this.sendMessage} />
               </div>
             </Layout>
           )}

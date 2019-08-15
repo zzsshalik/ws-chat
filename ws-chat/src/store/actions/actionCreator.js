@@ -1,4 +1,4 @@
-import { ADD_MESSAGES } from '../constants'
+import { ADD_MESSAGES } from '../constants';
 
 export const addMessages = (objectOfArrayMessages) => ({
   type: ADD_MESSAGES,

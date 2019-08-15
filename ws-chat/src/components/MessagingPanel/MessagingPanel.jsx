@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 import { addMessages } from '../../store/actions/actionCreator';
 
@@ -10,10 +11,6 @@ import Notifications from './Notifications/Notifications';
 // import styles from './MessagingPanel.module.scss';
 
 class MessagingPanel extends Component {
-    state={
-      messages:[],
-    }
-
     blured = false
 
     componentDidMount() {
@@ -53,5 +50,10 @@ export default connect((state) => ({
 }), { addMessages })(MessagingPanel);
 
 MessagingPanel.propTypes = {
+  connection: PropTypes.instanceOf(ReconnectingWebSocket).isRequired,
   sendMessage: PropTypes.func.isRequired,
+  messages: PropTypes.shape({
+    messages: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  addMessages: PropTypes.func.isRequired,
 };

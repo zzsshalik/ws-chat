@@ -7,10 +7,11 @@ import styles from './ConversationBox.module.scss';
 
 function Message({ data, index, style }) {
   const reverseIndex = data.length - 1 - index;
-
   return (
     <div className={styles.conversationItem} style={style}>
-      {data[reverseIndex].from}:{data[reverseIndex].message}{moment.unix(data[reverseIndex].time/1000).format("DD MMM h:mm:ss")}
+      {data[reverseIndex].from}
+      {data[reverseIndex].message}
+      {moment.unix(data[reverseIndex].time / 1000).format('DD MMM h:mm:ss')}
     </div>
   )
 }
@@ -50,8 +51,11 @@ export default class ConversationBox extends Component {
 Message.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   index: PropTypes.number.isRequired,
+  style: PropTypes.shape({
+    height: PropTypes.number,
+    width: PropTypes.string,
+  }).isRequired,
 };
-
 ConversationBox.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
