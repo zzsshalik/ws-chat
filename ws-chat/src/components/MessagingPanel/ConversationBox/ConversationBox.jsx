@@ -8,12 +8,12 @@ import styles from './ConversationBox.module.scss';
 function Message({ data, index, style }) {
   const reverseIndex = data.length - 1 - index;
   return (
-    <div className={styles.conversationItem} style={style}>
-      {data[reverseIndex].from}
-      {data[reverseIndex].message}
-      {moment.unix(data[reverseIndex].time / 1000).format('DD MMM h:mm:ss')}
+    <div className={index % 2 ? styles.conversationItemOdd : styles.conversationItemEven} style={style}>
+      <div className={styles.nicknameContainer}>{data[reverseIndex].from}</div>
+      <div className={styles.messageContainer}>{data[reverseIndex].message}</div>
+      <div className={styles.dataContainer}>{moment.unix(data[reverseIndex].time / 1000).format('DD MMM h:mm:ss')}</div>
     </div>
-  )
+  );
 }
 
 export default class ConversationBox extends Component {
@@ -26,11 +26,11 @@ export default class ConversationBox extends Component {
 
   render() {
     const { messages } = this.props;
-    const height = 35;
+    const height = 36;
     const lettersOnRow = 80;
     const getItemSize = (index) => {
       const reverseIndex = messages.length - 1 - index;
-      return Math.ceil(messages[reverseIndex].message.length / lettersOnRow) * height;
+      return Math.ceil(messages[reverseIndex].message.length / lettersOnRow) * height + height;
     };
     return (
       <List
