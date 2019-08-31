@@ -1,0 +1,27 @@
+.rowsContainer{
+    display: inline-grid;
+}
+.rowCellsContainer{
+    display: inline-flex;
+}
+.cellOffBoard{
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 52px;
+    height: 55px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 55px;
+}
+
+.cellContainX{
+    color:green;
+}
+.cellContainO{
+    color:blue;
+}
