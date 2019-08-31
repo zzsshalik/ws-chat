@@ -3,6 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import { NavLink } from 'react-router-dom';
 
 import Logout from '../Logout/Logout';
 import StatusBar from '../StatusBar/StatusBar';
@@ -15,6 +16,8 @@ const Layout = ({ children, connectionStatus, closeConnection }) => (
       <List component="nav">
         <ListItem component="div">
           <Logout closeConnection={closeConnection} />
+          <NavLink exact to="/" className={styles.linkPart} activeClassName={styles.activeLink}>Chat</NavLink>
+          <NavLink exact to="/game" className={styles.linkPart} activeClassName={styles.activeLink}>Game</NavLink>
           <StatusBar connectionStatus={connectionStatus} />
         </ListItem>
       </List>

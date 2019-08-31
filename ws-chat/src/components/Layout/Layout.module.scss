@@ -1,3 +1,18 @@
 .layoutContainer{
     display: grid;
 }
+
+.linkPart{
+    text-align: center;
+    width: 70px;
+    color: white;
+    text-decoration: none;
+    margin-left: 30px;
+    font-family: cursive;
+}
+
+.activeLink{
+    color: bisque;
+    border: 1px solid black;
+    border-radius: 2px;
+}

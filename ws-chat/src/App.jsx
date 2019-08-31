@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
+import { Switch, Route } from 'react-router-dom';
 import ReconnectingWebSocket from 'reconnecting-websocket';
+import { connect } from 'react-redux';
 
+import { deleteMessages } from './store/actions/actionCreator';
 import Layout from './components/Layout/Layout';
-import MessagingPanel from './components/MessagingPanel/MessagingPanel';
 import Login from './components/Login/Login';
-
 import './App.scss';
 
+const MessagingPanel = lazy(() => import('./components/MessagingPanel/MessagingPanel'));
+const Game = lazy(() => import('./components/Game/Game'));
 
 class App extends Component {
   constructor(props) {
@@ -29,8 +32,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('online', this.setOnOffline);
-    window.removeEventListener('offline', this.setOnOffline);
+
   }
 
   connect = (username) => {
@@ -39,11 +41,11 @@ class App extends Component {
       this.setState({ connection, username });
 
       connection.onopen = () => {
-        this.setState({...this.state, connectionStatus: 'online' });
+        this.setState({ connectionStatus: 'online' });
       };
 
       connection.onclose = () => {
-        this.setState({...this.state, connectionStatus: 'offline' });
+        this.setState({ connectionStatus: 'offline' });
       };
     }
   }
@@ -57,11 +59,13 @@ class App extends Component {
     localStorage.removeItem('username');
     const { connection } = this.state;
     connection.close();
-    this.setState({...this.state, username: null, connection: null, connectionStatus: 'offline' });
+    this.setState({ username: null, connection: null, connectionStatus: 'offline' });
+    const { deleteMessages } = this.props;
+    deleteMessages();
   }
 
   setOnOffline = (e) => {
-    this.setState({...this.state, connectionStatus: e.type });
+    this.setState({ connectionStatus: e.type });
   }
 
   sendMessage = (message) => {
@@ -86,10 +90,23 @@ class App extends Component {
         { !username && !connection
           ? <Login toConnect={this.toConnect} />
           : (
-            <Layout connectionStatus={connectionStatus} closeConnection={this.closeConnection}>
-              <div className="container">
-                <MessagingPanel username={username} connection={connection} sendMessage={this.sendMessage} />
-              </div>
+            <Layout connectionStatus={connectionStatus} closeConnection={this.closeConnection}> 
+              <Suspense fallback={<div>Загрузка...</div>}>
+                <Switch>
+                  <Route
+                    exact
+                    path="/"
+                    render={() => (
+                      <MessagingPanel
+                        username={username}
+                        connection={connection}
+                        sendMessage={this.sendMessage}
+                      />
+                    )}
+                  />
+                  <Route path="/game" component={Game} />
+                </Switch>
+              </Suspense>
             </Layout>
           )}
       </div>
@@ -97,4 +114,6 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect((state) => ({
+  messages: state.messages,
+}), { deleteMessages })(App);

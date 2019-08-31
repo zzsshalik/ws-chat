@@ -17,12 +17,13 @@ class MessagingBox extends Component {
     typingHandler = (e) => {
       const { sendMessage } = this.props;
       this.message = e.target.value;
-      this.setState({...this.state, message: e.target.value });
+      this.setState({ message: e.target.value });
 
       if (e.key === 'Enter') {
         e.preventDefault();
         sendMessage(e.target.value);
         e.target.value = '';
+        this.setState({ message: '' });
       }
     }
 
@@ -33,7 +34,7 @@ class MessagingBox extends Component {
       if (message !== '') {
         sendMessage(message);
         document.getElementById('input-panel').value = '';
-        this.setState({...this.state, message: '' });
+        this.setState({ message: '' });
       }
     }
 
