@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import styles from './GameBoard.module.scss';
 
 function Row(props) {
-  const { row, numColumns } = props;
+  const { row, gameMapRow } = props;
   const cells = [];
+  const numColumns = gameMapRow.length;
 
   for (let i = 0; i < numColumns; i += 1) {
     cells.push(
@@ -15,7 +16,9 @@ function Row(props) {
         row={row}
         col={i}
         key={`${row}${i}`}
-      />,
+      >
+      {gameMapRow[i]}
+      </div>,
     );
   }
 
@@ -28,13 +31,14 @@ function Row(props) {
 
 export default function GameBoard(props) {
   const {
-    numColumns, numRows, clickHandler, gameMap,
+    clickHandler, gameMap,
   } = props;
 
   function createBoard() {
+    const numRows = gameMap.length;
     const rows = [];
     for (let i = 0; i < numRows; i += 1) {
-      rows.push(<Row row={i} numColumns={numColumns} key={i} />);
+      rows.push(<Row row={i} key={i} gameMapRow ={gameMap[i]}/>);
     }
     return rows;
   }
@@ -47,13 +51,10 @@ export default function GameBoard(props) {
 }
 
 GameBoard.propTypes = {
-  numColumns: PropTypes.number.isRequired,
-  numRows: PropTypes.number.isRequired,
   clickHandler: PropTypes.func.isRequired,
   gameMap: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
 Row.propTypes = {
-  numColumns: PropTypes.number.isRequired,
   row: PropTypes.number.isRequired,
 };

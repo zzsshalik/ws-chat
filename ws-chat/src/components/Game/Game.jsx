@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import GameBoard from './GameBoard/GameBoard';
 import SettingsInput from './SettingsInput/SettingsInput';
+import ConfigureFileInput from './ConfigureFileInput/ConfigureFileInput';
 import InfoPanel from './InfoPanel/InfoPanel';
 import stylesForSells from './GameBoard/GameBoard.module.scss';
 
@@ -28,6 +29,12 @@ export default function Game() {
   }
   return (
     <>
+      <ConfigureFileInput
+        setNumRows={setNumRows}
+        setNumColumns={setNumColumns}      
+        setGameMap={setGameMap}
+        gameMap={gameMap}
+      />
       <SettingsInput
         setNumRows={setNumRows}
         setNumColumns={setNumColumns}
@@ -39,8 +46,6 @@ export default function Game() {
       />
       <InfoPanel currentPlayer={currentPlayer} />
       <GameBoard
-        numRows={numRows}
-        numColumns={numColumns}
         valueForWin={valueForWin}
         currentPlayer={currentPlayer}
         setCurrentPlayer={setCurrentPlayer}
