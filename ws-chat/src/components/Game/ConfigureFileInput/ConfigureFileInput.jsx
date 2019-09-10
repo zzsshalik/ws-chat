@@ -17,7 +17,10 @@ export default function ConfigureFileInput(props) {
     reader.onload = (event) => {
       const contents = event.target.result;
       const newArrayOfCommands = contents.split('\n').map((commandLine)=>{return commandLine.split(' ')})
-      drawController(newArrayOfCommands, setGameMap, gameMap);
+      drawController(newArrayOfCommands, setGameMap, gameMap).then((newGameMap)=>{
+        console.log(newGameMap);
+        setGameMap(newGameMap)
+      })
     }
     reader.readAsText(control.files[0]);
   }

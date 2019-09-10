@@ -8,8 +8,10 @@ import styles from './SettingsInput.module.scss';
 
 export default function SettingsInput(props) {
   const {
-    setNumRows, setNumColumns, setValueForWin, numRows, numColumns, valueForWin, setGameMap,
+   setValueForWin, valueForWin, setGameMap, gameMap,
   } = props;
+  const numRows = gameMap.length;
+  const numColumns =gameMap[0].length;
 
   function setValue(e) {
     const { id, value } = e.target;
@@ -17,12 +19,10 @@ export default function SettingsInput(props) {
     if (value < 0 || value > 31) return;
 
     if (id === 'Columns') {
-      setNumColumns(+value);
-      setGameMap(new Array(numRows).fill(0).map(() => new Array(+value).fill(null)));
+      setGameMap(new Array(numRows).fill(null).map(() => new Array(+value).fill(null)));
     }
     if (id === 'Rows') {
-      setNumRows(+value);
-      setGameMap(new Array(+value).fill(0).map(() => new Array(numColumns).fill(null)));
+      setGameMap(new Array(+value).fill(null).map(() => new Array(numColumns).fill(null)));
     }
     if (id === 'ValueForWin') {
       setValueForWin(+value);
@@ -61,11 +61,8 @@ export default function SettingsInput(props) {
 }
 
 SettingsInput.propTypes = {
-  setNumRows: PropTypes.func.isRequired,
-  setNumColumns: PropTypes.func.isRequired,
   setValueForWin: PropTypes.func.isRequired,
   valueForWin: PropTypes.number.isRequired,
-  numRows: PropTypes.number.isRequired,
-  numColumns: PropTypes.number.isRequired,
   setGameMap: PropTypes.func.isRequired,
+  gameMap: PropTypes.arrayOf(PropTypes.array).isRequired,
 };

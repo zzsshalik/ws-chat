@@ -8,15 +8,13 @@ import stylesForSells from './GameBoard/GameBoard.module.scss';
 
 export default function Game() {
   const [currentPlayer, setCurrentPlayer] = useState('X');
-  const [numRows, setNumRows] = useState(3);
-  const [numColumns, setNumColumns] = useState(3);
   const [valueForWin, setValueForWin] = useState(3);
-  const [gameMap, setGameMap] = useState(new Array(numRows).fill(0).map(() => new Array(numColumns).fill(null)));
+  const [gameMap, setGameMap] = useState(new Array(3).fill(null).map(() => new Array(3).fill(null)));
 
   function clickHandler(e) {
     const col = +e.target.getAttribute('col');
     const row = +e.target.getAttribute('row');
-    if (e.target.textContent !== 'X' && e.target.textContent !== 'O' && e.target.className === stylesForSells.cellOffBoard) {
+    if (e.target.textContent !== 'X' && e.target.textContent !== 'O' ) {/*&& e.target.className === stylesForSells.cellOffBoard*/
       e.target.textContent = currentPlayer;
       e.target.classList.add(currentPlayer === 'X' ? stylesForSells.cellContainO : stylesForSells.cellContainX);
       setGameMap((prevMap) => {
@@ -29,20 +27,15 @@ export default function Game() {
   }
   return (
     <>
-      <ConfigureFileInput
-        setNumRows={setNumRows}
-        setNumColumns={setNumColumns}      
+      <ConfigureFileInput    
         setGameMap={setGameMap}
         gameMap={gameMap}
       />
       <SettingsInput
-        setNumRows={setNumRows}
-        setNumColumns={setNumColumns}
         setValueForWin={setValueForWin}
-        numRows={numRows}
-        numColumns={numColumns}
         valueForWin={valueForWin}
         setGameMap={setGameMap}
+        gameMap={gameMap}
       />
       <InfoPanel currentPlayer={currentPlayer} />
       <GameBoard
