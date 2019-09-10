@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import classnames from 'classnames';
 import styles from './GameBoard.module.scss';
 
 function Row(props) {
@@ -9,9 +9,10 @@ function Row(props) {
   const numColumns = gameMapRow.length;
 
   for (let i = 0; i < numColumns; i += 1) {
+    const classNames = classnames(styles.cellOffBoard, gameMapRow[i] ==='X' ? styles.cellContainX : styles.cellContainO);
     cells.push(
       <div
-        className={styles.cellOffBoard}
+        className={classNames}
         id={`row:${row}/col:${i}`}
         row={row}
         col={i}
